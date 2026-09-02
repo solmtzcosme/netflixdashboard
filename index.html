@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
 <style>
     :root {
         --netflix-red: #E50914;
@@ -278,12 +279,7 @@
         text-shadow: 0 2px 10px rgba(0,0,0,0.5);
     }
 
-    /* Styling Plotly Dark Theme Overrides */
-    .js-plotly-plot .plotly .main-svg {
-        background: transparent !important;
-    }
-
-    /* ---------- RESPONSIVE: SMALL SCREENS ---------- */
+    /* Responsive */
     @media (max-width: 900px) {
         .dashboard {
             grid-template-rows: none;
@@ -329,12 +325,12 @@
 
     <div class="dashboard">
 
+        <!-- ROW 1 -->
         <div class="row row1">
-            <div class="card chart-card" id="card-line1">
+            <div class="card" id="card-line1">
                 <div class="card-header">Weekly Views Trend &mdash; Top Title</div>
                 <div class="chart-wrapper">
-                    <div>
-                        </div>
+                    <div id="chart-line1"></div>
                 </div>
             </div>
 
@@ -358,35 +354,138 @@
             </div>
         </div>
 
+        <!-- ROW 2 -->
+        <div class="row row2">
+            <div class="card" id="card-scatter">
+                <div class="card-header">Hours Viewed vs. Weeks in Top 10</div>
+                <div class="chart-wrapper">
+                    <div id="chart-scatter"></div>
+                </div>
+            </div>
+            <div class="card" id="card-hist">
+                <div class="card-header">Distribution of Hours Viewed</div>
+                <div class="chart-wrapper">
+                    <div id="chart-hist"></div>
+                </div>
+            </div>
+            <div class="card" id="card-box">
+                <div class="card-header">Hours Viewed by Category</div>
+                <div class="chart-wrapper">
+                    <div id="chart-box"></div>
+                </div>
+            </div>
         </div>
+
+        <!-- ROW 3 -->
+        <div class="row row3">
+            <div class="card" id="card-bar">
+                <div class="card-header">Top 10 Most Viewed Titles</div>
+                <div class="chart-wrapper">
+                    <div id="chart-bar"></div>
+                </div>
+            </div>
+            <div class="card" id="card-pie">
+                <div class="card-header">Share of Hours Viewed by Category</div>
+                <div class="chart-wrapper">
+                    <div id="chart-pie"></div>
+                </div>
+            </div>
+            <div class="card" id="card-line2">
+                <div class="card-header">Avg Hours Viewed Across Season Weeks</div>
+                <div class="chart-wrapper">
+                    <div id="chart-line2"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 </div>
 
 <script>
-    // Configuración para forzar temas oscuros en las gráficas Plotly existentes
-    document.addEventListener('DOMContentLoaded', function() {
-        if (window.Plotly) {
-            var darkLayoutUpdate = {
-                paper_bgcolor: 'rgba(0,0,0,0)',
-                plot_bgcolor: 'rgba(0,0,0,0)',
-                font: {
-                    color: '#A3A3A3',
-                    family: 'Plus Jakarta Sans, sans-serif'
-                },
-                xaxis: {
-                    gridcolor: 'rgba(255, 255, 255, 0.05)',
-                    zerolinecolor: 'rgba(255, 255, 255, 0.1)'
-                },
-                yaxis: {
-                    gridcolor: 'rgba(255, 255, 255, 0.05)',
-                    zerolinecolor: 'rgba(255, 255, 255, 0.1)'
-                }
-            };
-            
-            document.querySelectorAll('.plotly-graph-div').forEach(function(plotDiv) {
-                Plotly.relayout(plotDiv, darkLayoutUpdate);
-            });
-        }
-    });
+    // Configuración general para los gráficos de Plotly en Tema Oscuro
+    const darkLayout = {
+        paper_bgcolor: 'rgba(0,0,0,0)',
+        plot_bgcolor: 'rgba(0,0,0,0)',
+        font: { color: '#A3A3A3', family: 'Plus Jakarta Sans, sans-serif', size: 11 },
+        margin: { l: 45, r: 20, t: 20, b: 40 },
+        autosize: true,
+        xaxis: {
+            gridcolor: 'rgba(255, 255, 255, 0.05)',
+            zerolinecolor: 'rgba(255, 255, 255, 0.1)',
+            tickfont: { color: '#A3A3A3' }
+        },
+        yaxis: {
+            gridcolor: 'rgba(255, 255, 255, 0.05)',
+            zerolinecolor: 'rgba(255, 255, 255, 0.1)',
+            tickfont: { color: '#A3A3A3' }
+        },
+        showlegend: false
+    };
+
+    const config = { responsive: true, displayModeBar: false };
+
+    // 1. Weekly Views Trend
+    Plotly.newPlot('chart-line1', [{
+        x: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8'],
+        y: [120, 250, 450, 380, 290, 210, 160, 110],
+        type: 'scatter',
+        mode: 'lines+markers',
+        line: { color: '#E50914', width: 3, shape: 'spline' },
+        marker: { size: 6, color: '#E50914' }
+    }], darkLayout, config);
+
+    // 2. Scatter Plot
+    Plotly.newPlot('chart-scatter', [{
+        x: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20],
+        y: [50, 120, 180, 220, 310, 290, 410, 450, 520, 600],
+        mode: 'markers',
+        type: 'scatter',
+        marker: { size: 10, color: '#E50914', opacity: 0.8 }
+    }], darkLayout, config);
+
+    // 3. Histogram
+    Plotly.newPlot('chart-hist', [{
+        x: [10, 20, 20, 30, 30, 30, 40, 40, 50, 60, 70, 80, 90, 100],
+        type: 'histogram',
+        marker: { color: 'rgba(229, 9, 20, 0.7)', line: { color: '#E50914', width: 1 } }
+    }], darkLayout, config);
+
+    // 4. Box Plot
+    Plotly.newPlot('chart-box', [
+        { y: [100, 200, 150, 300, 250, 400], name: 'Sci-Fi', type: 'box', marker: { color: '#E50914' } },
+        { y: [80, 120, 140, 180, 210, 190], name: 'Drama', type: 'box', marker: { color: '#B20710' } },
+        { y: [50, 90, 110, 130, 170, 160], name: 'Action', type: 'box', marker: { color: '#FFFFFF' } }
+    ], { ...darkLayout, showlegend: true, legend: { font: { color: '#A3A3A3' } } }, config);
+
+    // 5. Bar Chart Top 10
+    Plotly.newPlot('chart-bar', [{
+        x: [550, 480, 420, 390, 350, 310, 280, 250, 210, 190],
+        y: ['Title 10', 'Title 9', 'Title 8', 'Title 7', 'Title 6', 'Title 5', 'Title 4', 'Title 3', 'Title 2', 'Title 1'],
+        type: 'bar',
+        orientation: 'h',
+        marker: { color: '#E50914' }
+    }], darkLayout, config);
+
+    // 6. Pie Chart
+    Plotly.newPlot('chart-pie', [{
+        values: [40, 25, 20, 15],
+        labels: ['Sci-Fi', 'Drama', 'Action', 'Comedy'],
+        type: 'pie',
+        hole: 0.5,
+        marker: { colors: ['#E50914', '#B20710', '#660000', '#333333'] },
+        textinfo: 'percent',
+        insidetextfont: { color: '#FFFFFF' }
+    }], { ...darkLayout, showlegend: true, legend: { font: { color: '#A3A3A3' } } }, config);
+
+    // 7. Line 2 Avg Hours
+    Plotly.newPlot('chart-line2', [{
+        x: ['S1', 'S2', 'S3', 'S4', 'S5'],
+        y: [300, 350, 420, 380, 460],
+        type: 'scatter',
+        mode: 'lines+markers',
+        line: { color: '#FFFFFF', width: 2 },
+        marker: { size: 6, color: '#E50914' }
+    }], darkLayout, config);
 </script>
 </body>
 </html>
