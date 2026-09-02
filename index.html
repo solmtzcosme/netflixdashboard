@@ -1,9 +1,4 @@
-# ==========================================
-# CÓDIGO PARA GOOGLE COLAB
-# Genera el HTML completo con botón a Colab y lo descarga
-# ==========================================
-
-html_content = '''<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -529,13 +524,3 @@ html_content = '''<!DOCTYPE html>
 </script>
 </body>
 </html>
-'''
-
-# Guardar y descargar
-with open('index.html', 'w', encoding='utf-8') as f:
-    f.write(html_content)
-
-print("✅ ¡Archivo 'index.html' generado exitosamente con el botón de Google Colab!")
-
-from google.colab import files
-files.download('index.html')
